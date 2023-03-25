@@ -32,7 +32,7 @@ public class TrainDetails {
 	}
 	
 	public String toString() {
-		return String.format("Traindetails{trainNo='%s',trainName='%s',trainSeats=%d}",
+		return String.format("traindetails{trainNo='%s',trainName='%s',trainSeats=%d}",
 				trainNo,trainName,trainSeats);
 	}
 	

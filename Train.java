@@ -42,7 +42,7 @@ public class Train extends HttpServlet {
 			}
 			response.setStatus(HttpServletResponse.SC_CREATED);
 			response.getWriter().println("Train details added successfully.");
-		}else if (url.equals("https://vignesh-dot-internship-full.uc.r.appspot.com/booking")) {
+		} else if (url.equals("https://vignesh-dot-internship-full.uc.r.appspot.com/booking")) {
 			BufferedReader reader = request.getReader();
 			StringBuilder sb = new StringBuilder();
 			String line;
@@ -65,12 +65,59 @@ public class Train extends HttpServlet {
 					}
 				}
 			} catch (Exception e) {
-				System.out.print(e+"catch");
+				System.out.print(e + "catch");
 			}
 			response.setStatus(HttpServletResponse.SC_CREATED);
 			response.getWriter().println("Booking successfully.");
 
-		}else {
+		} else if (url.equals("https://vignesh-dot-internship-full.uc.r.appspot.com/DeleteTrainDetails")) {
+			BufferedReader reader = request.getReader();
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+			String json = sb.toString();
+			try {
+				JSONObject jsonObject = new JSONObject(json);
+				String deleteTrainNo = jsonObject.getString("deleteTrainNo");
+				for (TrainDetails trains : trainDetailsList) {
+					if (trains.getTrainNo().equals(deleteTrainNo)) {
+						trainDetailsList.remove(trains);
+					}
+				}
+
+			} catch (Exception e) {
+				System.out.print(e + "catch");
+			}
+		}else if (url.equals("https://vignesh-dot-internship-full.uc.r.appspot.com/UpdateTrainDetails")) {
+			BufferedReader reader = request.getReader();
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+			String json = sb.toString();
+			try {
+				JSONObject jsonObject = new JSONObject(json);
+				String updateTrainNo = jsonObject.getString("updateTrainNo");
+				for (TrainDetails trains : trainDetailsList) {
+					if (trains.getTrainNo().equals(updateTrainNo)) {
+						String UpdateTrainName = jsonObject.getString("UpdateTrainName");
+						int updateTrainSeats = jsonObject.getInt("updateTrainSeats");
+						trains.setTrainName(UpdateTrainName);
+						trains.setTrainSeats(updateTrainSeats);
+					} else {
+						System.out.print("train not available");
+					}
+				}
+			} catch (Exception e) {
+				System.out.print(e);
+			}
+			response.setStatus(HttpServletResponse.SC_CREATED);
+			response.getWriter().println("Update Train details added successfully.");
+		}
+		else {
 			System.out.print("Something error");
 		}
 	}
@@ -82,7 +129,7 @@ public class Train extends HttpServlet {
 			String trainNumber = request.getParameter("train");
 			if (trainNumber == null) {
 				response.setContentType("application/json");
-				response.getWriter().println(trainDetailsList.toString());
+				response.getWriter().println(trainDetailsList);
 			} else {
 				boolean isTrainFound = false;
 				for (TrainDetails train : trainDetailsList) {
@@ -117,8 +164,11 @@ public class Train extends HttpServlet {
 					response.sendError(HttpServletResponse.SC_NOT_FOUND, "Booking not found");
 				}
 			}
-		}else {
+		} else {
 			System.out.print("Something error");
 		}
 	}
+		
+
 }
+
